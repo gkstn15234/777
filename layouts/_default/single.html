@@ -18,13 +18,17 @@
                 {{ with .Params.author }}<span class="post-author">| {{ . }}</span>{{ end }}
                 {{ with .Params.tags }}<span class="post-tags">| {{ delimit . ", " }}</span>{{ end }}
             </div>
+            <!-- Thumbnail image removed to allow content image to be displayed -->
             {{ if .Params.images }}
             <div class="post-image mb-3">
                 <img src="{{ index .Params.images 0 }}" alt="{{ .Title }}" class="img-fluid" style="max-width: 100%; height: auto;">
             </div>
             {{ end }}
-            <!-- Thumbnail image removed from content to avoid duplication -->
-            {{ .Content }}
+            {{ if .Content }}
+            <div class="post-content mb-5">
+                {{ .Content | replace "<img src=\"{{ index .Params.images 0 }}\"" "<img src=\"{{ index ..Content | firstImage }}\"" }}
+            </div>
+            {{ end }}
         </div>
     </article>
 </div>
