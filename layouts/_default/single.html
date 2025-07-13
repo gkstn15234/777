@@ -25,7 +25,9 @@
             {{ end }}
         </header>
         <div class="post-content mb-5">
-            {{ .Content }}
+            {{ if not .Params.images }}
+                {{ .Content }}
+            {{ end }}
         </div>
     </article>
 </div>
