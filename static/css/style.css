@@ -3488,3 +3488,90 @@ img {
         --border-color: #000000;
     }
 }
+
+/* --- 카테고리 카드형 그리드 커스텀 --- */
+.taxonomy-card {
+    transition: box-shadow 0.2s, transform 0.2s;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(30,40,60,0.06);
+    overflow: hidden;
+    min-height: 220px;
+    position: relative;
+}
+.taxonomy-card:hover {
+    box-shadow: 0 6px 24px rgba(30,40,60,0.13);
+    transform: translateY(-4px) scale(1.02);
+    z-index: 2;
+}
+.taxonomy-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f7fa;
+    border-radius: 8px;
+    margin-right: 12px;
+    font-size: 2rem;
+    color: #6c757d;
+}
+.taxonomy-card .card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.1rem;
+}
+.taxonomy-card .card-title a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.taxonomy-card .card-title a:hover {
+    color: var(--primary-color);
+}
+.taxonomy-card .text-muted {
+    font-size: 0.95em;
+}
+.taxonomy-card .card-text {
+    font-size: 0.98em;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+.latest-post-preview {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 0.5rem 0.7rem;
+    margin-top: 0.5rem;
+    min-height: 56px;
+}
+.latest-post-preview img {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 10px;
+    background: #e9ecef;
+}
+.latest-post-preview .fw-bold {
+    font-size: 1em;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.latest-post-preview .fw-bold:hover {
+    color: var(--primary-color);
+}
+.latest-post-preview .small {
+    color: #999;
+    font-size: 0.93em;
+}
+@media (max-width: 991px) {
+    .taxonomy-card { min-height: 200px; }
+}
+@media (max-width: 767px) {
+    .taxonomy-card { min-height: 170px; }
+    .taxonomy-icon { width: 36px; height: 36px; font-size: 1.3rem; }
+    .latest-post-preview img { width: 36px; height: 36px; }
+}

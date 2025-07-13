@@ -1,244 +1,27 @@
 {{ define "main" }}
-{{ partial "breadcrumb.html" . }}
-
-<!-- Reading Progress Bar -->
-<div class="reading-progress">
-    <div class="progress-bar" id="reading-progress"></div>
-</div>
-
-<div class="single-article-page">
-    <div class="container">
-        <div class="row">
-            <!-- Main Article Content -->
-            <div class="col-lg-8">
-                <article class="main-article-content">
-                    <!-- Article Header -->
-                    <header class="article-header">
-                        <div class="article-category-badge">{{ .Section | title }}</div>
-                        <h1 class="article-main-title">{{ .Title }}</h1>
-                        
-                        <div class="article-meta-info">
-                            <div class="meta-left">
-                                {{ if .Params.author }}
-                                {{ if eq .Params.author "오은진" }}
-                                <a href="/authors/oh-eun-jin/" class="author-name">{{ .Params.author }}</a>
-                                {{ else }}
-                                <a href="/authors/{{ .Params.author | urlize }}/" class="author-name">{{ .Params.author }}</a>
-                                {{ end }}
-                                {{ end }}
-                                {{ if not .Params.hideDate }}
-                                <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" class="publish-date">
-                                    {{ .Date.Format "2006년 01월 02일 15:04" }}
-                                </time>
-                                {{ end }}
-                            </div>
-                            <div class="meta-right">
-                                <div class="social-share-inline">
-                                    <button class="share-btn-inline facebook" onclick="shareArticle('facebook')">
-                                        <i class="fab fa-facebook-f"></i>
-                                    </button>
-                                    <button class="share-btn-inline twitter" onclick="shareArticle('twitter')">
-                                        <i class="fab fa-twitter"></i>
-                                    </button>
-                                    <button class="share-btn-inline copy" onclick="shareArticle('copy')">
-                                        <i class="fas fa-link"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-
-                    <!-- Article Image - Google Discover Optimized -->
-                    {{ if .Params.images }}
-                    <div class="article-main-image">
-                        {{ $imagePath := index .Params.images 0 }}
-                        {{ if (strings.HasPrefix $imagePath "/images/") }}
-                            <!-- 로컬 이미지 - Google Discover 최적화 -->
-                            <img src="{{ $imagePath }}" 
-                                 alt="{{ .Title }}" 
-                                 class="img-fluid discover-optimized"
-                                 loading="lazy"
-                                 width="1200" 
-                                 height="675"
-                                 data-discover="true">
-                        {{ else }}
-                            <!-- 외부 이미지 -->
-                            <img src="{{ $imagePath }}" 
-                                 alt="{{ .Title }}" 
-                                 class="img-fluid discover-optimized"
-                                 loading="lazy"
-                                 width="1200" 
-                                 height="675">
-                        {{ end }}
-                    </div>
-                    {{ end }}
-
-                    <!-- Article Summary -->
-                    {{ if .Description }}
-                    <div class="article-summary">
-                        <p>{{ .Description }}</p>
-                    </div>
-                    {{ end }}
-
-                    <!-- Article Content -->
-                    <div class="article-content">
-                        {{ .Content }}
-                    </div>
-
-                    <!-- Article Tags -->
-                    {{ if .Params.tags }}
-                    <div class="article-tags-section">
-                        <div class="tags-wrapper">
-                            {{ range .Params.tags }}
-                            <a href="/tags/{{ . | urlize }}/" class="article-tag">#{{ . }}</a>
-                            {{ end }}
-                        </div>
-                    </div>
-                    {{ end }}
-
-                    <!-- Author Info -->
-                    {{ if .Params.author }}
-                    <div class="author-info-box">
-                        <div class="author-content">
-                            <div class="author-avatar">
-                                <i class="fas fa-user-circle"></i>
-                            </div>
-                            <div class="author-details">
-                                <h5 class="author-name">{{ .Params.author }}</h5>
-                                <p class="author-bio">{{ .Params.author_bio | default "자동차 경제 전문 기자" }}</p>
-                                {{ if eq .Params.author "오은진" }}
-                                <a href="/authors/oh-eun-jin/" class="author-link">기자 페이지 보기</a>
-                                {{ else }}
-                                <a href="/authors/{{ .Params.author | urlize }}/" class="author-link">기자 페이지 보기</a>
-                                {{ end }}
-                            </div>
-                        </div>
-                    </div>
-                    {{ end }}
-                </article>
+<div class="container">
+    <article class="blog-single-post">
+        <header class="post-header mb-4">
+            <h1 class="post-title">{{ .Title }}</h1>
+            <div class="post-meta mb-2">
+                <span class="post-date">{{ .Date.Format "2006-01-02" }}</span>
+                {{ with .Params.author }}<span class="post-author">| {{ . }}</span>{{ end }}
+                {{ with .Params.tags }}<span class="post-tags">| {{ delimit . ", " }}</span>{{ end }}
             </div>
-
-            <!-- Sidebar -->
-            <div class="col-lg-4">
-                <aside class="article-sidebar">
-                    <!-- 주요 기사 위젯 -->
-                    <div class="sidebar-widget">
-                        <h4 class="widget-title">주요 기사</h4>
-                        <div class="widget-content">
-                            {{ range first 5 (where .Site.RegularPages.ByDate.Reverse ".Section" "ne" "authors") }}
-                            {{ if ne .Permalink $.Permalink }}
-                            <article class="sidebar-article">
-                                <div class="sidebar-article-content">
-                                    <h5 class="sidebar-article-title">
-                                        <a href="{{ .Permalink }}">{{ .Title | truncate 60 }}</a>
-                                    </h5>
-                                    <div class="sidebar-article-meta">
-                                        <span class="sidebar-category">{{ .Section | title }}</span>
-                                        <span class="sidebar-date">{{ .Date.Format "01월 02일" }}</span>
-                                    </div>
-                                </div>
-                            </article>
-                            {{ end }}
-                            {{ end }}
-                        </div>
-                    </div>
-
-                    <!-- 최신 자동차 뉴스 위젯 -->
-                    <div class="sidebar-widget">
-                        <h4 class="widget-title">최신 자동차 뉴스</h4>
-                        <div class="widget-content">
-                            {{ range first 4 (where .Site.RegularPages.ByDate.Reverse ".Section" "automotive") }}
-                            {{ if ne .Permalink $.Permalink }}
-                            <article class="sidebar-news-item">
-                                <div class="sidebar-news-thumb">
-                                    {{ if .Params.images }}
-                                    <img src="{{ index .Params.images 0 }}" alt="{{ .Title }}" class="img-fluid">
-                                    {{ else }}
-                                    <div class="no-image">
-                                        <i class="fas fa-car"></i>
-                                    </div>
-                                    {{ end }}
-                                </div>
-                                <div class="sidebar-news-content">
-                                    <h6 class="sidebar-news-title">
-                                        <a href="{{ .Permalink }}">{{ .Title | truncate 50 }}</a>
-                                    </h6>
-                                    <div class="sidebar-news-date">{{ .Date.Format "01월 02일" }}</div>
-                                </div>
-                            </article>
-                            {{ end }}
-                            {{ end }}
-                        </div>
-                    </div>
-
-                    <!-- 경제 분석 위젯 -->
-                    <div class="sidebar-widget">
-                        <h4 class="widget-title">경제 분석</h4>
-                        <div class="widget-content">
-                            {{ range first 4 (where .Site.RegularPages.ByDate.Reverse ".Section" "economy") }}
-                            {{ if ne .Permalink $.Permalink }}
-                            <article class="sidebar-news-item">
-                                <div class="sidebar-news-thumb">
-                                    {{ if .Params.images }}
-                                    <img src="{{ index .Params.images 0 }}" alt="{{ .Title }}" class="img-fluid">
-                                    {{ else }}
-                                    <div class="no-image">
-                                        <i class="fas fa-chart-line"></i>
-                                    </div>
-                                    {{ end }}
-                                </div>
-                                <div class="sidebar-news-content">
-                                    <h6 class="sidebar-news-title">
-                                        <a href="{{ .Permalink }}">{{ .Title | truncate 50 }}</a>
-                                    </h6>
-                                    <div class="sidebar-news-date">{{ .Date.Format "01월 02일" }}</div>
-                                </div>
-                            </article>
-                            {{ end }}
-                            {{ end }}
-                        </div>
-                    </div>
-
-
-                </aside>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Related Articles -->
-<section class="related-articles-section">
-    <div class="container">
-        <div class="section-header">
-            <h3 class="section-title">관련 기사</h3>
-        </div>
-        <div class="row">
-            {{ range first 4 (where .Site.RegularPages.ByDate.Reverse ".Section" .Section) }}
-            {{ if ne .Permalink $.Permalink }}
-            <div class="col-lg-3 col-md-6 mb-4">
-                <article class="related-article">
-                    <div class="related-article-thumb">
-                        {{ if .Params.images }}
-                        <img src="{{ index .Params.images 0 }}" alt="{{ .Title }}" class="img-fluid">
-                        {{ else }}
-                        <div class="no-image">
-                            <i class="fas fa-newspaper"></i>
-                        </div>
-                        {{ end }}
-                    </div>
-                    <div class="related-article-content">
-                        <h5 class="related-article-title">
-                            <a href="{{ .Permalink }}">{{ .Title | truncate 60 }}</a>
-                        </h5>
-                        <div class="related-article-meta">
-                            <span class="related-date">{{ .Date.Format "01월 02일" }}</span>
-                        </div>
-                    </div>
-                </article>
+            {{ if .Params.images }}
+            <div class="post-image mb-3">
+                <img src="{{ index .Params.images 0 }}" alt="{{ .Title }}" class="img-fluid" style="max-width: 600px;">
             </div>
             {{ end }}
+            {{ if .Description }}
+            <div class="post-summary mb-3">
+                <p>{{ .Description }}</p>
+            </div>
             {{ end }}
+        </header>
+        <div class="post-content mb-5">
+            {{ .Content }}
         </div>
-    </div>
-</section>
+    </article>
+</div>
 {{ end }}

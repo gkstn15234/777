@@ -1,92 +1,34 @@
 baseURL: 'https://autodaiiy.com'
 languageCode: 'ko-kr'
-title: '오토데일프릭스 - 자동차 경제의 새로운 기준'
+title: '오토데일프릭스 블로그'
 defaultContentLanguage: 'ko'
 hasCJKLanguage: true
 timeZone: 'Asia/Seoul'
 
 params:
-  description: '오토데일프릭스는 자동차 산업과 경제 정보를 전문적으로 다루는 자동차 경제 미디어입니다.'
-  keywords: '자동차, 경제, 모빌리티, 자동차산업, 카비즈니스, 오토, 자동차뉴스'
-  author: '휴먼빅데이터'
-  company: '휴먼빅데이터'
-  registration: '847-59-00407'
-  address: '인천시 남동구 은청로 4-7 B동 332호'
-  phone: '1811-9670'
-  email: 'contact@humanbigdata.com'
-  publisher: '오은진'
-  editor: '오은진'
-  youthProtectionOfficer: '오은진'
-  
-  # 언론사 등록 정보
-  mediaRegistration: '인천,아55580'
-  registrationDate: '2025년 6월 15일'
-  publicationDate: '2025년 6월 15일'
-
-  # 이미지 가이드라인 (기자용 참고사항)
-  imageGuidelines:
-    minWidth: 1200
-    recommendedWidth: 1600
-    aspectRatio: "16:9"
-    format: "jpg"
-    quality: 95
-    description: "구글 디스커버 노출을 위해 최소 1200px 이상의 고품질 이미지를 사용하세요."
+  description: '자동차와 경제, 그리고 일상에 대한 생각을 기록하는 개인 블로그입니다.'
+  keywords: '블로그, 자동차, 경제, 일상, 생각'
+  author: '오은진'
 
 menu:
   main:
-    - name: '자동차'
-      url: '/automotive/'
-      weight: 10
-    - name: '경제'
-      url: '/economy/'
-      weight: 20
+    - name: 'Home'
+      url: '/'
+      weight: 1
+    - name: 'Tags'
+      url: '/tags/'
+      weight: 2
+    - name: 'About'
+      url: '/about/'
+      weight: 3
 
 taxonomies:
   tag: tags
-  category: categories
-  author: authors
 
 outputs:
-  home: ['HTML', 'RSS', 'JSON', 'SitemapGeneral', 'SitemapNews', 'SitemapAuthors', 'SitemapPages', 'SitemapLocal', 'SitemapVideo', 'PostSitemap']
+  home: ['HTML', 'RSS']
   page: ['HTML']
   section: ['HTML', 'RSS']
-
-outputFormats:
-  SitemapGeneral:
-    mediaType: 'application/xml'
-    baseName: 'sitemap-general'
-    isPlainText: true
-    notAlternative: true
-  SitemapNews:
-    mediaType: 'application/xml'
-    baseName: 'sitemap-news'
-    isPlainText: true
-    notAlternative: true
-  SitemapAuthors:
-    mediaType: 'application/xml'
-    baseName: 'sitemap-authors'
-    isPlainText: true
-    notAlternative: true
-  SitemapPages:
-    mediaType: 'application/xml'
-    baseName: 'sitemap-pages'
-    isPlainText: true
-    notAlternative: true
-  SitemapLocal:
-    mediaType: 'application/xml'
-    baseName: 'sitemap-local'
-    isPlainText: true
-    notAlternative: true
-  SitemapVideo:
-    mediaType: 'application/xml'
-    baseName: 'sitemap-video'
-    isPlainText: true
-    notAlternative: true
-  PostSitemap:
-    mediaType: 'application/xml'
-    baseName: 'post-sitemap1'
-    isPlainText: true
-    notAlternative: true
 
 markup:
   goldmark:
@@ -96,47 +38,11 @@ markup:
     style: github
     lineNos: true
 
-imaging:
-  resampleFilter: lanczos
-  quality: 95
-  anchor: smart
-  # 구글 디스커버 최적화를 위한 이미지 크기 설정
-  sizes:
-    - "480x270"   # 16:9 소형 썸네일
-    - "800x450"   # 16:9 중형 썸네일
-    - "1200x675"  # 16:9 대형 이미지 (구글 디스커버 권장)
-    - "1600x900"  # 16:9 초고화질
-    - "1200x630"  # Open Graph 표준 (Facebook, Twitter)
-  # 이미지 처리 옵션
-  bgColor: "#ffffff"
-  hint: photo
-
-sitemap:
-  changefreq: hourly
-  priority: 0.5
-  filename: sitemap.xml
-
-related:
-  includeNewer: true
-  indices:
-    - name: keywords
-      weight: 100
-    - name: tags
-      weight: 80
-    - name: date
-      weight: 10
-
 pagination:
-  pagerSize: 12
+  pagerSize: 10
   path: page
 
 enableRobotsTXT: true
-enableGitInfo: true
-
-# 빌드 최적화
-buildDrafts: false
-buildFuture: false
-buildExpired: false
 
 # SEO 최적화
 googleAnalytics: ""
@@ -146,16 +52,3 @@ disableKinds: []
 uglyURLs: false
 canonifyURLs: false
 relativeURLs: false
-
-# 보안 헤더
-security:
-  enableInlineShortcodes: false
-  funcs:
-    getenv:
-      - "^HUGO_"
-      - "^WC_"
-  http:
-    methods:
-      - "(?i)GET|POST"
-    urls:
-      - ".*"

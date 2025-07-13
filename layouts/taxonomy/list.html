@@ -1,26 +1,51 @@
 {{ define "main" }}
 <section class="taxonomy-list">
-    <div class="container">
-        <div class="page-header">
+    <div class="container py-5">
+        <div class="page-header mb-4">
             <h1>
                 <i class="fas fa-{{ if eq .Data.Plural "tags" }}tags{{ else if eq .Data.Plural "authors" }}users{{ else }}folder-open{{ end }}"></i>
                 {{ .Title }}
             </h1>
         </div>
-
-        <div class="taxonomy-grid">
-            <div class="row">
-                {{ range .Data.Terms.Alphabetical }}
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <div class="taxonomy-item">
-                        <a href="{{ .Page.Permalink }}" class="taxonomy-link">
-                            <h5>{{ if eq $.Data.Plural "tags" }}#{{ end }}{{ .Page.Title }}</h5>
-                            <span class="count">{{ .Count }}개 기사</span>
-                        </a>
+        <div class="row g-4">
+            {{ range .Data.Terms.Alphabetical }}
+            <div class="col-lg-4 col-md-6">
+                <div class="card taxonomy-card h-100 shadow-sm border-0 position-relative taxonomy-hover">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="taxonomy-icon me-3" style="font-size:2rem; color:#6c757d;">
+                                <i class="fas fa-folder-open"></i>
+                            </div>
+                            <div>
+                                <h4 class="card-title mb-0">
+                                    <a href="{{ .Page.Permalink }}" class="stretched-link text-decoration-none text-dark">{{ .Page.Title }}</a>
+                                </h4>
+                                <span class="text-muted small">{{ .Count }}개 글</span>
+                            </div>
+                        </div>
+                        {{ with .Page.Params.description }}
+                        <p class="card-text text-secondary mb-2">{{ . | truncate 80 }}</p>
+                        {{ end }}
+                        {{ $latest := first 1 .Page.Pages.ByDate.Reverse }}
+                        {{ range $latest }}
+                        <div class="latest-post-preview mt-2 p-2 bg-light rounded d-flex align-items-center">
+                            {{ if .Params.images }}
+                            <img src="{{ index .Params.images 0 }}" alt="{{ .Title }}" style="width:48px; height:48px; object-fit:cover; border-radius:6px; margin-right:10px;">
+                            {{ else }}
+                            <div style="width:48px; height:48px; background:#e9ecef; display:flex; align-items:center; justify-content:center; border-radius:6px; margin-right:10px;">
+                                <i class="fas fa-image text-muted"></i>
+                            </div>
+                            {{ end }}
+                            <div>
+                                <a href="{{ .RelPermalink }}" class="fw-bold text-dark">{{ .Title | truncate 32 }}</a>
+                                <div class="small text-muted">{{ .Date.Format "2006-01-02" }}</div>
+                            </div>
+                        </div>
+                        {{ end }}
                     </div>
                 </div>
-                {{ end }}
             </div>
+            {{ end }}
         </div>
     </div>
 </section>
