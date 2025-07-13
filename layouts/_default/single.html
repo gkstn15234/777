@@ -23,8 +23,7 @@
                 <img src="{{ index .Params.images 0 }}" alt="{{ .Title }}" class="img-fluid" style="max-width: 100%; height: auto;">
             </div>
             {{ end }}
-        </header>
-        <div class="post-content mb-5">
+            <!-- Thumbnail image removed from content to avoid duplication -->
             {{ .Content }}
         </div>
     </article>
