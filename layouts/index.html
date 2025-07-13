@@ -1,32 +1,101 @@
 {{ define "main" }}
-<main class="main-content">
+<div class="main-hero-section py-5 text-center bg-light mb-5">
     <div class="container">
-        <h1 class="blog-title">{{ .Site.Title }}</h1>
-        <p class="blog-description">{{ .Site.Params.description }}</p>
-        <div class="blog-post-list">
-            {{ range .Site.RegularPages.ByDate.Reverse }}
-            <article class="blog-post-item mb-5">
-                <h2 class="post-title">
-                    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-                </h2>
-                <div class="post-meta mb-2">
-                    <span class="post-date">{{ .Date.Format "2006-01-02" }}</span>
-                    {{ with .Params.author }}<span class="post-author">| {{ . }}</span>{{ end }}
-                    {{ with .Params.tags }}<span class="post-tags">| {{ delimit . ", " }}</span>{{ end }}
-                </div>
-                {{ if .Params.images }}
-                <div class="post-image mb-2">
-                    <img src="{{ index .Params.images 0 }}" alt="{{ .Title }}" class="img-fluid" style="max-width: 400px;">
-                </div>
-                {{ end }}
-                <div class="post-summary mb-2">
-                    {{ .Summary | plainify | truncate 120 }}
-                </div>
-                <a href="{{ .RelPermalink }}" class="btn btn-primary btn-sm">자세히 보기</a>
-            </article>
-            <hr/>
-            {{ end }}
-        </div>
+        <h1 class="display-4 fw-bold mb-2">{{ .Site.Title }}</h1>
+        <p class="lead mb-4">{{ .Site.Params.description }}</p>
+        <form action="/search/" method="get" class="d-flex justify-content-center mb-3" style="max-width:400px;margin:auto;">
+            <input type="text" name="q" class="form-control form-control-lg" placeholder="검색어를 입력하세요...">
+            <button class="btn btn-primary btn-lg ms-2" type="submit">검색</button>
+        </form>
     </div>
-</main>
+</div>
+
+<div class="container mb-5">
+    <h2 class="section-title mb-3">최신 글</h2>
+    <div class="row g-4">
+        {{ range first 6 .Site.RegularPages.ByDate.Reverse }}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow-sm border-0 blog-main-card">
+                {{ if .Params.images }}
+                <img src="{{ index .Params.images 0 }}" class="card-img-top" alt="{{ .Title }}" style="height:180px;object-fit:cover;">
+                {{ end }}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title"><a href="{{ .RelPermalink }}" class="text-decoration-none text-dark">{{ .Title }}</a></h5>
+                    <p class="card-text text-muted">{{ .Summary | truncate 80 }}</p>
+                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                        <span class="small text-muted">{{ .Date.Format "2006-01-02" }}</span>
+                        {{ with .Params.author }}<span class="small text-muted">{{ . }}</span>{{ end }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>
+
+<div class="container mb-5">
+    <h2 class="section-title mb-3">인기 글</h2>
+    <div class="row g-4">
+        {{ $popular := first 3 (sort .Site.RegularPages.ByDate.Reverse ".Params.views" "desc") }}
+        {{ range $popular }}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 bg-white shadow blog-popular-card">
+                {{ if .Params.images }}
+                <img src="{{ index .Params.images 0 }}" class="card-img-top" alt="{{ .Title }}" style="height:140px;object-fit:cover;">
+                {{ end }}
+                <div class="card-body">
+                    <h5 class="card-title"><a href="{{ .RelPermalink }}" class="text-decoration-none text-dark">{{ .Title }}</a></h5>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="small text-muted">{{ .Date.Format "2006-01-02" }}</span>
+                        <span class="badge bg-light text-dark">조회수: {{ .Params.views | default 0 }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>
+
+<div class="container mb-5">
+    <h2 class="section-title mb-3">카테고리별 주요 글</h2>
+    <div class="row g-4">
+        {{ range $cat := .Site.Taxonomies.categories }}
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-sm blog-category-card">
+                <div class="card-body">
+                    <h5 class="card-title mb-2"><a href="{{ $cat.Page.Permalink }}" class="text-decoration-none text-primary">{{ $cat.Page.Title }}</a></h5>
+                    {{ with $cat.Page.Params.description }}<p class="text-muted small mb-2">{{ . }}</p>{{ end }}
+                    {{ $main := first 1 $cat.Page.Pages.ByDate.Reverse }}
+                    {{ range $main }}
+                    <div class="mb-2">
+                        <a href="{{ .RelPermalink }}" class="fw-bold text-dark">{{ .Title | truncate 40 }}</a>
+                        <div class="small text-muted">{{ .Date.Format "2006-01-02" }}</div>
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+</div>
+
+<div class="container mb-5">
+    <h2 class="section-title mb-3">태그 클라우드</h2>
+    <div class="mb-4">
+        {{ range $tag, $val := .Site.Taxonomies.tags }}
+        <a href="{{ $val.Page.Permalink }}" class="badge bg-light text-dark me-2 mb-2" style="font-size:1.1em;">#{{ $tag }}</a>
+        {{ end }}
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="newsletter-box p-4 bg-light rounded text-center">
+        <h4 class="mb-2">뉴스레터 구독</h4>
+        <p class="mb-3">최신 글과 소식을 이메일로 받아보세요.</p>
+        <form action="#" method="post" class="d-flex justify-content-center" style="max-width:400px;margin:auto;">
+            <input type="email" name="email" class="form-control form-control-lg" placeholder="이메일 주소 입력">
+            <button class="btn btn-primary btn-lg ms-2" type="submit">구독</button>
+        </form>
+    </div>
+</div>
 {{ end }}
