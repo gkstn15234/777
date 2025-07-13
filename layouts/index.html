@@ -96,4 +96,35 @@
         </form>
     </div>
 </div>
+
+<style>
+    @media (max-width: 768px) {
+        .post-image img {
+            width: 100%;
+            height: auto;
+        }
+        .post-content {
+            padding: 0 15px;
+        }
+    }
+</style>
+<div class="container">
+    <article class="blog-single-post">
+        <header class="post-header mb-4">
+            <div class="post-meta mb-2">
+                <span class="post-date">{{ .Date.Format "2006-01-02" }}</span>
+                {{ with .Params.author }}<span class="post-author">| {{ . }}</span>{{ end }}
+                {{ with .Params.tags }}<span class="post-tags">| {{ delimit . ", " }}</span>{{ end }}
+            </div>
+            {{ if .Params.images }}
+            <div class="post-image mb-3">
+                <img src="{{ index .Params.images 0 }}" alt="{{ .Title }}" class="img-fluid" style="max-width: 100%; height: auto;">
+            </div>
+            {{ end }}
+        </header>
+        <div class="post-content mb-5">
+            {{ .Content }}
+        </div>
+    </article>
+</div>
 {{ end }}
